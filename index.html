@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy New Year Kitty 🐱🌹</title>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    color:#fff;
+    text-align:center;
+}
+
+/* Card */
+.card{
+    background:rgba(0,0,0,0.55);
+    padding:30px;
+    border-radius:25px;
+    width:90%;
+    max-width:460px;
+    box-shadow:0 0 40px rgba(255,255,255,0.2);
+    animation:fade 1.2s ease;
+    position:relative;
+    z-index:10;
+}
+
+h1{font-size:26px;margin-bottom:15px;}
+p{font-size:18px;line-height:1.75;white-space:pre-line;}
+
+button,a.btn{
+    margin-top:18px;
+    padding:12px 28px;
+    border:none;
+    border-radius:30px;
+    background:#ff6b81;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    text-decoration:none;
+}
+button:hover,a.btn:hover{background:#ff4757;}
+
+@keyframes fade{
+    from{opacity:0;transform:scale(0.9);}
+    to{opacity:1;transform:scale(1);}
+}
+
+/* 🌹 Roses */
+.rose{
+    position:absolute;
+    opacity:0.8;
+    animation:floatRose linear infinite;
+    pointer-events:none;
+}
+@keyframes floatRose{
+    0%{transform:translateY(110vh) rotate(0);opacity:0;}
+    20%{opacity:0.8;}
+    100%{transform:translateY(-10vh) rotate(360deg);opacity:0;}
+}
+
+/* 🎆 Fireworks */
+.firework{
+    position:absolute;
+    width:7px;
+    height:7px;
+    background:radial-gradient(circle,#fff,gold,orange,red);
+    border-radius:50%;
+    box-shadow:0 0 15px gold,0 0 35px orange,0 0 60px red;
+    animation:explode 1.5s ease-out;
+}
+@keyframes explode{
+    from{transform:scale(0);opacity:1;}
+    to{transform:scale(20);opacity:0;}
+}
+
+/* 💡 Flash */
+.flash{
+    position:fixed;
+    inset:0;
+    background:rgba(255,255,255,0.25);
+    animation:flash 0.3s ease-out;
+    pointer-events:none;
+    z-index:5;
+}
+@keyframes flash{
+    from{opacity:1;}
+    to{opacity:0;}
+}
+
+.gif,.photo{
+    width:130px;
+    border-radius:15px;
+    margin:12px auto;
+    box-shadow:0 0 18px rgba(255,255,255,0.3);
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🎵 Background Music -->
+<audio id="music" preload="auto" loop>
+  <source src="https://cdn.pixabay.com/audio/2023/03/13/audio_8f16a0e5c7.mp3">
+</audio>
+
+<!-- 🎆 Crackers Sound -->
+<audio id="cracker" preload="auto">
+  <source src="https://cdn.pixabay.com/audio/2023/12/31/audio_celebration_fireworks.mp3">
+</audio>
+
+<div class="card" id="content">
+<h1>🎆 Happy New Year Kitty 🐱🌹</h1>
+<p id="text"></p>
+<button onclick="start()">Start 🎵</button>
+</div>
+
+<script>
+const content=document.getElementById("content");
+const music=document.getElementById("music");
+const cracker=document.getElementById("cracker");
+
+/* 🌹 Infinite Roses */
+setInterval(()=>{
+    const r=document.createElement("img");
+    r.src="https://pngimg.com/uploads/rose/rose_PNG66729.png";
+    r.className="rose";
+    r.style.left=Math.random()*100+"vw";
+    r.style.width=25+Math.random()*25+"px";
+    r.style.animationDuration=10+Math.random()*10+"s";
+    document.body.appendChild(r);
+    setTimeout(()=>r.remove(),22000);
+},800);
+
+/* ✍️ Typing */
+function typeText(el,text,i=0){
+    if(i<text.length){
+        el.innerHTML+=text.charAt(i);
+        setTimeout(()=>typeText(el,text,i+1),55);
+    }
+}
+
+/* 🔊 Unlock Audio (MOBILE FIX) */
+function start(){
+    music.volume=0;
+    cracker.volume=0;
+
+    Promise.all([music.play(),cracker.play()]).then(()=>{
+        music.pause(); music.currentTime=0;
+        cracker.pause(); cracker.currentTime=0;
+
+        music.volume=0.6;
+        cracker.volume=1;
+        music.play();
+    }).catch(()=>{});
+
+    content.innerHTML=`
+    <h1>Kitty 🐱✨</h1>
+    <img class="gif" src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif">
+    <p id="t1"></p>
+    <button onclick="next2()">Next 🌙</button>`;
+    typeText(t1,"Tumhare saath yeh New Year\nzyada soft, calm\naur special lag raha hai 🌹");
+}
+
+/* 🎆 Fireworks */
+function fireworks(){
+    const flash=document.createElement("div");
+    flash.className="flash";
+    document.body.appendChild(flash);
+    setTimeout(()=>flash.remove(),300);
+
+    for(let i=0;i<40;i++){
+        const f=document.createElement("div");
+        f.className="firework";
+        f.style.left=Math.random()*100+"vw";
+        f.style.top=Math.random()*100+"vh";
+        document.body.appendChild(f);
+        setTimeout(()=>f.remove(),1500);
+    }
+}
+
+/* 🎉 BIG CELEBRATION */
+function celebrate(){
+    cracker.currentTime=0;
+    cracker.loop=true;
+    cracker.play().catch(()=>{});
+
+    let count=0;
+    const burst=setInterval(()=>{
+        fireworks();
+        count++;
+        if(count>=6){
+            clearInterval(burst);
+            cracker.loop=false;
+            cracker.pause();
+        }
+    },600);
+}
+
+/* Slides */
+function next2(){
+    content.innerHTML=`
+    <h1>Little things 🌸</h1>
+    <img class="gif" src="https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif">
+    <p id="t2"></p>
+    <button onclick="next3()">Continue ✨</button>`;
+    typeText(t2,"Tum itna so jaati ho 😴\nlagta hai neend bhi tumhari fan hai 🐾");
+}
+
+function next3(){
+    fireworks();
+    content.innerHTML=`
+    <h1>I love you ❤️</h1>
+    <p>Yeh New Year tumhare saath shuru karna chahta hoon 🌙</p>
+    <button onclick="nextFinal()">Next 🌹</button>`;
+}
+
+/* 👑 FINAL QUESTION */
+function nextFinal(){
+    content.innerHTML=`
+    <h1>One last question 🌙</h1>
+    <p>
+    Will you be my asset,<br>
+    which I never want to be depreciated? 💎<br><br>
+    Will you be my queen? 👑
+    </p>
+    <button onclick="yes()">YES 💖</button>
+    <button onclick="no()" style="background:#57606f;margin-left:10px;">NO 🌙</button>`;
+}
+
+function yes(){
+    celebrate();
+    content.innerHTML=`
+    <h1>You said YES 👑💖</h1>
+    <p>
+    I promise to value you,<br>
+    respect you,<br>
+    and never let you feel depreciated 💎
+    </p>
+    <a class="btn" href="https://wa.me/918271105489">Message me 💬</a>`;
+}
+
+function no(){
+    content.innerHTML=`
+    <h1>It’s okay 🌸</h1>
+    <p>
+    Thank you for being honest 🌙<br>
+    I respect you always ✨
+    </p>
+    <a class="btn" href="https://wa.me/918271105489">Talk to me 💬</a>`;
+}
+</script>
+
+</body>
+</html>
